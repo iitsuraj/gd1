@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Dimensions, Image } from "react-native";
 import { Layout, Button, Icon, Text } from "@ui-kitten/components";
 // import Expo from "expo";
+import * as Google from "expo-google-app-auth";
 import firebase from "firebase";
 const ButtonWidth = (Dimensions.get("window").width * 75) / 100;
 
@@ -82,9 +83,12 @@ class AuthScreen extends Component {
   signInWithGoogleAsync = async () => {
     // alert("button clicked");
     try {
-      const result = await Expo.Google.logInAsync({
+      const result = await Google.logInAsync({
         androidClientId:
           "605484856938-nipr3qlip09dgl2igd7oi888g36ub0t8.apps.googleusercontent.com",
+        androidStandaloneAppClientId:
+          "605484856938-f8573hhfb7q8vp0gukfa65nn3c83re3i.apps.googleusercontent.com",
+        behavior: "web",
         // iosClientId: '', //enter ios client id
         scopes: [
           "profile",
