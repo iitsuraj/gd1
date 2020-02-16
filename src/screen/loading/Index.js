@@ -21,7 +21,8 @@ class Loading extends React.Component {
                 var profile = {
                   name: user.displayName,
                   email: user.email,
-                  profile: user.photoURL
+                  profile: user.photoURL,
+                  points: 0
                 };
                 AsyncStorage.setItem("profile", JSON.stringify(profile)).then(
                   () => {

@@ -24,19 +24,14 @@ class AuthScreen extends Component {
     return false;
   };
   onSignIn = googleUser => {
-    // console.log("Google Auth Response", googleUser);
-    // We need to register an Observer on Firebase Auth to make sure auth is initialized.
     var unsubscribe = firebase.auth().onAuthStateChanged(
       function(firebaseUser) {
         unsubscribe();
-        // Check if we are already signed-in Firebase with the correct user.
         if (!this.isUserEqual(googleUser, firebaseUser)) {
-          // Build Firebase credential with the Google ID token.
           var credential = firebase.auth.GoogleAuthProvider.credential(
             googleUser.idToken,
             googleUser.accessToken
           );
-          // Sign in with credential from the Google user.
           firebase
             .auth()
             .signInAndRetrieveDataWithCredential(credential)
@@ -53,7 +48,7 @@ class AuthScreen extends Component {
                     created_at: Date.now()
                   })
                   .then(function(snapshot) {
-                    // console.log('Snapshot', snapshot);
+                    this.props.navigation.navigate("LoadingScreen");
                   });
               } else {
                 firebase
@@ -81,7 +76,6 @@ class AuthScreen extends Component {
     );
   };
   signInWithGoogleAsync = async () => {
-    // alert("button clicked");
     try {
       const result = await Google.logInAsync({
         androidClientId:
@@ -90,12 +84,7 @@ class AuthScreen extends Component {
           "605484856938-f8573hhfb7q8vp0gukfa65nn3c83re3i.apps.googleusercontent.com",
         behavior: "web",
         // iosClientId: '', //enter ios client id
-        scopes: [
-          "profile",
-          "email",
-          "https://www.googleapis.com/auth/fitness.activity.read",
-          "https://www.googleapis.com/auth/fitness.activity.write"
-        ]
+        scopes: ["profile", "email"]
       });
 
       if (result.type === "success") {
@@ -142,7 +131,7 @@ class AuthScreen extends Component {
           }}
         >
           <Text appearance="hint" style={{ textAlign: "center" }}>
-            Some Lines about Dash cash
+            Bhago Grahak Bhago
           </Text>
         </Layout>
         <Layout style={{ marginBottom: 15, marginHorizontal: 20 }}>

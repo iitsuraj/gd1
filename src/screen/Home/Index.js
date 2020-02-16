@@ -25,7 +25,22 @@ class HomeScreen extends Component {
       tobetraveld: 0,
       pedometerloading: true,
       graphloading: true,
-      data: []
+      data: [
+        {
+          date: "2/16/2020",
+          day: "-2",
+          prediction: "0",
+          run: "0",
+          userid: "f16b4c51_2a1d_483a_881f_96d4ea8c7815"
+        },
+        {
+          date: "2/16/2020",
+          day: "-1",
+          prediction: "0",
+          run: "0",
+          userid: "f16b4c51_2a1d_483a_881f_96d4ea8c7815"
+        }
+      ]
     };
   }
 
@@ -126,11 +141,14 @@ class HomeScreen extends Component {
             Pedometer.getStepCountAsync(start, end).then(
               result => {
                 fetch(
-                  `https://dash-cash-ml.herokuapp.com/?user_id=${Constants.installationId}&run=${result.steps}`
+                  `https://dash-cash-ml.herokuapp.com/?user_id=${
+                    Constants.installationId
+                  }&run=${(result.steps / 1400).toFixed(2)}`
                 )
                   .then(response => response.json())
                   .then(responseJson => {
                     result.push(responseJson);
+                    this.savePoints(responseJson);
                     this.saveData(key, result);
                   })
                   .catch(error => {
@@ -151,21 +169,22 @@ class HomeScreen extends Component {
           Pedometer.getStepCountAsync(start, end).then(
             result => {
               fetch(
-                `https://dash-cash-ml.herokuapp.com/?user_id=${Constants.installationId}&run=${result.steps}`
+                `https://dash-cash-ml.herokuapp.com/?user_id=${
+                  Constants.installationId
+                }&run=${(result.steps / 1400).toFixed(2)}`
               )
                 .then(response => response.json())
                 .then(responseJson => {
                   // console.log("firsst time data recive");
                   const value = [];
                   value.push(responseJson);
+
+                  this.savePoints(responseJson);
                   this.saveData(key, value);
                 })
                 .catch(error => {
                   console.log(error);
                   alert("heroku data error");
-                  console.log(
-                    `https://dash-cash-ml.herokuapp.com/?user_id=${Constants.installationId}&run=${result.steps}`
-                  );
                   // console.log("first time data fetch fails");
                   // alert("error in getting graph data");
                 });
@@ -186,9 +205,35 @@ class HomeScreen extends Component {
           // console.log(error);
         } else {
           result = JSON.parse(result);
-          this.setState({ data: result, graphloading: false });
+          var graphData = this.state.data.concat(result);
+          var tobetraveld = Number(result[result.length - 1].prediction) * 1400;
+          tobetraveld = Math.floor(tobetraveld);
+          this.setState({
+            data: graphData,
+            graphloading: false,
+            tobetraveld: tobetraveld
+          });
         }
       });
+    });
+  }
+
+  savePoints(data) {
+    AsyncStorage.getItem("profile", (err, res) => {
+      if (err) {
+        alert(err);
+      }
+      res = JSON.parse(res);
+      var u = data.prediction;
+      var n = u / 2;
+      var p = 3.14159;
+      var e = 2.72828;
+      var x = data.run;
+      var todayPoints =
+        (1 / (n * Math.pow(2 * p, 1 / 2))) *
+        Math.pow(e, -Math.pow(x - u, 2) / (2 * Math.pow(n, 2)));
+      res.points = res.points + todayPoints;
+      AsyncStorage.setItem("profile", JSON.stringify(res));
     });
   }
 
@@ -216,7 +261,7 @@ class HomeScreen extends Component {
                 )}
               </Card>
 
-              <Card headername={"Steps"} headericon={"home-outline"}>
+              <Card headername={"Steps"} headericon={"heart-outline"}>
                 {this.state.graphloading && this.state.graphloading ? (
                   <Lazyload height={50} width={itemWidth} />
                 ) : (
@@ -230,7 +275,7 @@ class HomeScreen extends Component {
                   <Distance steps={this.state.todaytraveld} />
                 )}
               </Card>
-              <Card headername={"Distance Coverd"} headericon={"heart-outline"}>
+              <Card headername={"Track"} headericon={"heart-outline"}>
                 {this.state.graphloading && this.state.graphloading ? (
                   <Lazyload height={50} width={itemWidth} />
                 ) : (

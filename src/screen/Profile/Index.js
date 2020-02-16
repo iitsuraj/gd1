@@ -18,10 +18,6 @@ class InfoList extends React.Component {
   render() {
     const { hint, message, value } = this.props;
     return (
-      // <Layout style={styles.infolist}>
-      //   <Text appearance="hint">{hint}</Text>
-      //   <Text>{value}</Text>
-      // </Layout>
       <Layout style={styles.infolist}>
         <Layout>
           <Text appearance="hint">{hint}</Text>
@@ -44,7 +40,8 @@ class ProfileScreen extends Component {
       profile: {
         name: "",
         email: "",
-        profile: "../../assets/Icon/icon.png"
+        profile: "../../assets/Icon/icon.png",
+        points: 0
       }
     };
   }
@@ -101,14 +98,15 @@ class ProfileScreen extends Component {
 
               <InfoList hint={"Name"} value={this.state.profile.name} />
               <InfoList hint={"Email"} value={this.state.profile.email} />
+              <InfoList hint={"Points"} value={this.state.profile.points} />
               <TouchableOpacity
                 onLongPress={() => {
                   alert("Change your Policy number");
                 }}
               >
                 <InfoList
-                  hint={"In"}
-                  value={"in number"}
+                  hint={"Insurance"}
+                  value={"xxxxx"}
                   message={"*long press to change"}
                 />
               </TouchableOpacity>

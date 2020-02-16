@@ -1,36 +1,4 @@
-// import React, { Component } from "react";
-// import { Layout, Text } from "@ui-kitten/components";
-
-// export default class Graph extends Component {
-//   render() {
-//     const { itemWidth, data } = this.props;
-//     let Graph;
-//     if (data.length < 3) {
-//       Graph = <Text>To View Graph Use app 3 day</Text>;
-//     } else {
-//       Graph = (
-//         <VictoryChart
-//           domainPadding={{ x: 40 }}
-//           width={itemWidth}
-//           theme={VictoryTheme.material}
-//         >
-//           <VictoryGroup colorScale={"qualitative"}>
-//             <VictoryLine data={data} x="day" y="run" />
-//             <VictoryLine data={data} x="day" y="perdition" />
-//           </VictoryGroup>
-//         </VictoryChart>
-//       );
-
-//       return (
-//         <Layout>
-//           <Text>suraj</Text>
-//         </Layout>
-//       );
-//     }
-//   }
-// }
-
-import React from "react";
+import React, { Component } from "react";
 import { Layout, Text } from "@ui-kitten/components";
 import {
   VictoryLine,
@@ -38,28 +6,27 @@ import {
   VictoryTheme,
   VictoryGroup
 } from "victory-native";
-class Graph extends React.Component {
+
+export default class Graph extends Component {
   render() {
     const { itemWidth, data } = this.props;
-    let Graph;
-    if (data.length < 3) {
-      Graph = <Text>To View Graph Use app 3 day</Text>;
-    } else {
-      Graph = (
-        <VictoryChart
-          domainPadding={{ x: 40 }}
-          width={itemWidth}
-          theme={VictoryTheme.material}
-        >
-          <VictoryGroup colorScale={"qualitative"}>
-            <VictoryLine data={data} x="day" y="run" />
-            <VictoryLine data={data} x="day" y="perdition" />
-          </VictoryGroup>
-        </VictoryChart>
-      );
-    }
-    return <Layout>{Graph}</Layout>;
+    return (
+      <Layout>
+        {data.length < 3 ? (
+          <Text>Use app for atleast 3 days to generate a graph</Text>
+        ) : (
+          <VictoryChart
+            domainPadding={{ x: 40 }}
+            width={itemWidth}
+            theme={VictoryTheme.material}
+          >
+            <VictoryGroup colorScale={"qualitative"}>
+              <VictoryLine data={data} x="day" y="run" />
+              <VictoryLine data={data} x="day" y="prediction" />
+            </VictoryGroup>
+          </VictoryChart>
+        )}
+      </Layout>
+    );
   }
 }
-
-export default Graph;
