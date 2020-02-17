@@ -29,15 +29,15 @@ class HomeScreen extends Component {
         {
           date: "2/16/2020",
           day: "-2",
-          prediction: "0",
-          run: "0",
+          prediction: "0.0",
+          run: "0.0",
           userid: "f16b4c51_2a1d_483a_881f_96d4ea8c7815"
         },
         {
           date: "2/16/2020",
           day: "-1",
-          prediction: "0",
-          run: "0",
+          prediction: "0.0",
+          run: "0.0",
           userid: "f16b4c51_2a1d_483a_881f_96d4ea8c7815"
         }
       ]
@@ -126,6 +126,7 @@ class HomeScreen extends Component {
             var tobetraveld =
               Number(result[result.length - 1].prediction) * 1400;
             tobetraveld = Math.floor(tobetraveld);
+            //console.log(graphData);
             this.setState({
               graphloading: false,
               data: graphData,
@@ -133,17 +134,21 @@ class HomeScreen extends Component {
             });
             // console.log("set to State Complete");
           } else {
-            // console.log("Fetching Today data");
-            const end = new Date();
-            const start = new Date();
-            start.setDate(end.getDate() - 1);
-            start.setDate(end.getDate() - 1);
+            const end = new Date(new Date().setHours(0, 0, 0, 0));
+            const start = new Date(
+              new Date(new Date().setDate(end.getDate() - 1)).setHours(
+                0,
+                0,
+                0,
+                0
+              )
+            );
             Pedometer.getStepCountAsync(start, end).then(
-              result => {
+              stepresult => {
                 fetch(
                   `https://dash-cash-ml.herokuapp.com/?user_id=${
                     Constants.installationId
-                  }&run=${(result.steps / 1400).toFixed(2)}`
+                  }&run=${(stepresult.steps / 1400).toFixed(2)}`
                 )
                   .then(response => response.json())
                   .then(responseJson => {
@@ -152,6 +157,7 @@ class HomeScreen extends Component {
                     this.saveData(key, result);
                   })
                   .catch(error => {
+                    //console.log(error);
                     alert("error heroku data");
                   });
               },
@@ -162,10 +168,10 @@ class HomeScreen extends Component {
           }
         } else {
           // console.log("first time data fetch");
-          const end = new Date();
-          const start = new Date();
-          start.setDate(end.getDate() - 1);
-          start.setDate(end.getDate() - 1);
+          const end = new Date(new Date().setHours(0, 0, 0, 0));
+          const start = new Date(
+            new Date(new Date().setDate(end.getDate() - 1)).setHours(0, 0, 0, 0)
+          );
           Pedometer.getStepCountAsync(start, end).then(
             result => {
               fetch(
@@ -185,8 +191,6 @@ class HomeScreen extends Component {
                 .catch(error => {
                   console.log(error);
                   alert("heroku data error");
-                  // console.log("first time data fetch fails");
-                  // alert("error in getting graph data");
                 });
             },
             error => {

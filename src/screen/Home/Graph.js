@@ -4,7 +4,8 @@ import {
   VictoryLine,
   VictoryChart,
   VictoryTheme,
-  VictoryGroup
+  VictoryGroup,
+  VictoryBar
 } from "victory-native";
 
 export default class Graph extends Component {
@@ -20,9 +21,9 @@ export default class Graph extends Component {
             width={itemWidth}
             theme={VictoryTheme.material}
           >
-            <VictoryGroup colorScale={"qualitative"}>
-              <VictoryLine data={data} x="day" y="run" />
-              <VictoryLine data={data} x="day" y="prediction" />
+            <VictoryGroup offset={10} colorScale={"qualitative"}>
+              <VictoryBar data={data} x="day" y="run" />
+              <VictoryBar data={data} x="day" y="prediction" />
             </VictoryGroup>
           </VictoryChart>
         )}
